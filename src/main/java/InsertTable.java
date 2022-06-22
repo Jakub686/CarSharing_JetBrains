@@ -1,46 +1,38 @@
+import View.View;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class InsertTable {
 
-    // JDBC driver name and database URL
-    static final String JDBC_DRIVER = "org.h2.Driver";
+    public static void insertTable() {
+        Scanner scanner = new Scanner(System.in);
 
-    //  Database credentials
-    static final String USER = "sa";
-    static final String PASS = "";
+        View.showEnterTheCompanyName();
+        String input = scanner.nextLine();
 
-    public static void insertTable(Connection conn, Statement stmt) {
+        Connection conn = null;
+        Statement stmt = null;
         try{
-            // STEP 1: Register JDBC driver
-            Class.forName(JDBC_DRIVER);
+            // Register JDBC driver
+            Class.forName(Controller.JDBC_DRIVER);
 
-            // STEP 2: Open a connection
-
-            conn = DriverManager.getConnection(Main.DB_URL);
+            // Open a connection
+            conn = DriverManager.getConnection(Controller.DB_URL);
             conn.setAutoCommit(true);
 
 
-            // STEP 3: Execute a query
+            // Execute a query
             stmt = conn.createStatement();
-
-            String sql = "INSERT INTO COMPANY " + "VALUES (101, 'Za5435a')";
+            String sql = "INSERT INTO COMPANY(name) VALUES('"+input+"')";
             stmt.executeUpdate(sql);
 
-//            sql = "INSERT INTO COMPANY " + "VALUES (105, 'Mahnaz')";
-//            stmt.executeUpdate(sql);
-//
-//            sql = "INSERT INTO COMPANY " + "VALUES (106, 'Zaid')";
-//            stmt.executeUpdate(sql);
-//
-//            sql = "INSERT INTO COMPANY " + "VALUES(107, 'Sumit')";
-//            stmt.executeUpdate(sql);
+            System.out.println("The company was created!");
 
-            System.out.println("Inserted records into the table...");
-
-            // STEP 4: Clean-up environment
+            // Clean-up environment
             stmt.close();
             conn.close();
         } catch(SQLException se) {
@@ -54,7 +46,7 @@ public class InsertTable {
             try {
                 if(stmt !=null) stmt.close();
             } catch(SQLException se2) {
-            } // nothing we can do
+            }
             try {
                 if(conn !=null) conn.close();
             } catch(SQLException se) {

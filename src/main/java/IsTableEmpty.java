@@ -1,36 +1,34 @@
 import java.sql.*;
 
-public class ReadTable {
-
-    public static void readTable() {
+public class IsTableEmpty {
+    public static void isTableEmpty(){
 
         Connection conn = null;
         Statement stmt = null;
 
         try {
-            // Register JDBC driver
+            //Register JDBC driver
             Class.forName(Controller.JDBC_DRIVER);
 
             //Open a connection
             conn = DriverManager.getConnection(Controller.DB_URL);
 
-            //Execute a query
+            // Execute a query
             stmt = conn.createStatement();
-            String sql = "SELECT id, name FROM COMPANY";
+            String sql = "SELECT count(*), FROM COMPANY";
             ResultSet rs = stmt.executeQuery(sql);
 
             // Extract data from result set
-            while (rs.next()) {
-                // Retrieve by column name
-                int id = rs.getInt("id");
+            //Executing the query
+            rs = stmt.executeQuery(sql);
+            //Retrieving the result
+            rs.next();
+            int count = rs.getInt(1);
+            if(count == 0)
+                System.out.println("The company list is empty!");
 
-                String name = rs.getString("name");
 
-                //Display values
-                System.out.print(id + ". " + name);
-            }
-
-            //Clean-up environment
+            // Clean-up environment
             rs.close();
         } catch (SQLException se) {
             // Handle errors for JDBC
